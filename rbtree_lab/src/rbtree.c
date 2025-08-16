@@ -146,13 +146,11 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
   while (traverse_node != t->nil) {
     parent_node = traverse_node;
 
+    // 중복을 허용해야하므로, 삽입될 키 >= 현재 노드 키 라면 오른쪽으로 이동하게 한다.
     if (key < traverse_node->key) {           // 찾는 키가 현재 노드의 키보다 작다. -> 왼쪽 자식으로 이동하기
       traverse_node = traverse_node->left;
-    } else if (key > traverse_node->key) {    // 찾는 키가 현재 노드의 키보다 크다. -> 오른쪽 자식으로 이동하기
+    } else {    // 찾는 키가 현재 노드의 키보다 크거나 같은 경우
       traverse_node = traverse_node-> right;
-    } else {                                  // 중복 키가 있는 경우
-      free(new_node); // 메모리 해제 (누수 방지)
-      return traverse_node;
     }
   }
 
