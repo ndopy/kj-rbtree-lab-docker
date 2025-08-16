@@ -4,9 +4,16 @@
 
 rbtree *new_rbtree(void) {
   rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
+  if (p == NULL) {
+    return NULL;
+  }
 
   // nil 노드(=센티넬) 을 위한 메모리 할당 및 초기화
   node_t *nil = (node_t *)calloc(1, sizeof(node_t));
+  if (nil == NULL) {
+    free(p);
+    return NULL;
+  }
 
   // nil 노드의 색상은 반드시 BLACK
   nil->color = RBTREE_BLACK;
@@ -94,13 +101,11 @@ void rbtree_insert_fixup(rbtree *t, node_t *z) {
         if (z == parent_node->right) {  // z가 parent 의 오른쪽 자식 -> 꺾인 모양 (Triangle)
           z = parent_node;
           left_rotate(t, z);
-          // left_rotate 이후 z의 부모가 바뀌었으므로, parent_node 를 다시 설정
-          parent_node = z->parent;
         }
         // z가 parent 의 왼쪽 자식 -> 일직선 모양 (Line)
-        parent_node->color = RBTREE_BLACK;
-        grand_parent_node->color = RBTREE_RED;
-        right_rotate(t, grand_parent_node);
+        z->parent->color = RBTREE_BLACK;
+        z->parent->parent->color = RBTREE_RED;
+        right_rotate(t, z->parent->parent);
       }
     }
     // 부모가 할아버지의 "오른쪽 자식"인 경우
@@ -121,13 +126,11 @@ void rbtree_insert_fixup(rbtree *t, node_t *z) {
         if (z == parent_node->left) {  // z가 parent 의 왼쪽 자식 -> 꺾인 모양 (Triangle)
           z = parent_node;
           right_rotate(t, z);
-          // right_rotate 이후 z의 부모가 바뀌었으므로, parent_node 를 다시 설정
-          parent_node = z->parent;
         }
         // z가 parent 의 왼쪽 자식 -> 일직선 모양 (Line)
-        parent_node->color = RBTREE_BLACK;
-        grand_parent_node->color = RBTREE_RED;
-        left_rotate(t, grand_parent_node);
+        z->parent->color = RBTREE_BLACK;
+        z->parent->parent->color = RBTREE_RED;
+        left_rotate(t, z->parent->parent);
       }
     }
   } // end while
