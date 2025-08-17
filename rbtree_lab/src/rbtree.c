@@ -197,13 +197,35 @@ node_t *rbtree_find(const rbtree *t, const key_t key) {
 }
 
 node_t *rbtree_min(const rbtree *t) {
-  // TODO: implement find
-  return t->root;
+  if (t->root == t->nil) {
+    return t->nil; // 빈 트리일 경우, nil 노드 반환
+  }
+
+  // 루트에서부터 탐색 시작
+  node_t *current = t->root;
+
+  // 왼쪽 자식이 없을 때까지(=nil일 때까지) 계속 왼쪽으로 이동하기
+  while (current->left != t->nil) {
+    current = current->left;
+  }
+
+  return current;
 }
 
 node_t *rbtree_max(const rbtree *t) {
-  // TODO: implement find
-  return t->root;
+  if (t->root == t->nil) {
+    return t->nil; // 빈 트리일 경우, nil 노드 반환
+  }
+
+  // 루트에서부터 탐색 시작
+  node_t *current = t->root;
+
+  // 오른쪽 자식이 없을 때까지(=nil일 때까지) 계속 오른쪽으로 이동하기
+  while (current->right != t->nil) {
+    current = current->right;
+  }
+
+  return current;
 }
 
 int rbtree_erase(rbtree *t, node_t *p) {
