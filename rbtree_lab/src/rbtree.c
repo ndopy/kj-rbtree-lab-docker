@@ -25,8 +25,27 @@ rbtree *new_rbtree(void) {
   return p;
 }
 
+void delete_nodes_recursively(node_t *node, node_t *nil) {
+  // Base case: 현재 노드가 nil(센티넬) 노드이면 종료
+  if (node == nil) {
+    return;
+  }
+
+  delete_nodes_recursively(node->left, nil);   // 왼쪽 서브트리
+  delete_nodes_recursively(node->right, nil);  // 오른쪽 서브트리
+  free(node); // 현재 노드 메모리 반환
+}
+
 void delete_rbtree(rbtree *t) {
-  // TODO: reclaim the tree nodes's memory
+  if (t == NULL) {
+    return;
+  }
+
+  // 루트 노드부터 모든 노드 삭제하기 (nil 노드는 종료 조건용)
+  delete_nodes_recursively(t->root, t->nil);
+
+  // 모든 노드 삭제 후, nil(센티넬) 노드와 rbtree 구조체 메모리 반환하기
+  free(t->nil);
   free(t);
 }
 
