@@ -388,7 +388,30 @@ int rbtree_erase(rbtree *t, node_t *p) {
   return 0;
 }
 
+void inorder_recursive(const node_t *current, const node_t *nil,
+                        key_t *array, size_t *index, size_t size) {
+  // Base case: 현재 노드가 nil이거나, 배열이 꽉 찼으면 반환
+  if (current == nil || *index >= size) {
+    return;
+  }
+
+  // 왼쪽으로 더 이상 갈 수 없을 때까지 재귀 호출
+  inorder_recursive(current->left, nil, array, index, size);
+
+  // 2. 왼쪽 탐색이 끝났으면 현재 노드의 값을 저장
+  if (*index < size) {
+    array[*index] = current->key;
+    (*index)++;
+  }
+
+  // 오른쪽 서브트리에 대해 재귀 호출
+  inorder_recursive(current->right, nil, array, index, size);
+}
+
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
+  size_t index = 0;
+
+  inorder_recursive(t->root, t->nil, arr, &index, n);
 
   return 0;
 }
