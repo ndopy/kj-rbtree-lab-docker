@@ -157,6 +157,11 @@ void rbtree_insert_fixup(rbtree *t, node_t *z) {
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
   node_t *new_node = malloc(sizeof(node_t));   // 새 노드 생성
+
+  if (new_node == NULL) {  // malloc 실패 시 NULL 반환
+    return NULL;
+  }
+
   new_node->key = key;
 
   node_t *traverse_node = t->root;
@@ -384,6 +389,6 @@ int rbtree_erase(rbtree *t, node_t *p) {
 }
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
-  // TODO: implement to_array
+
   return 0;
 }
